@@ -32,7 +32,7 @@
   
 
 - name: copy war file
-  copy: src=./target/LoginWebApp-1.war dest=/opt/apache-tomcat-9.0.16/webapps/
+  copy: src=./target/ansibleapp-0.0.1-SNAPSHOT.war dest=/opt/apache-tomcat-9.0.16/webapps/
 
 
   notify: restart tomcat

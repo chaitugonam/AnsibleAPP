@@ -28,7 +28,7 @@ pipeline {
              
             steps {
                  
-              sh 'mvn package'
+             sh "ansible-playbook main.yml -i inventories/dev/hosts --user jenkins --key-file ~/.ssh/id_rsa"
                
               
 

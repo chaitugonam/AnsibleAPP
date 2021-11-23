@@ -1,47 +1,15 @@
 ---
-- name: add group "tomcat"
-  group: name={{tomcat_group}}
-
-- name: add user "tomcat"
-  user: name={{tomcat_user}} group={{tomcat_group}} home=/usr/share/tomcat createhome=no
-  become: True
-  become_method: sudo
-
-- name: Download Tomcat
-  get_url: url=http://apache.cs.utah.edu/tomcat/tomcat-9/v9.0.16/bin/apache-tomcat-9.0.16.tar.gz dest=/opt/apache-tomcat-9.0.16.tar.gz
-
-- name: Extract archive
-  command: chdir=/usr/share /bin/tar xvf /opt/apache-tomcat-9.0.16.tar.gz -C /opt/ creates=/opt/apache-tomcat-9.0.16
-
-- name: Symlink install directory
-  file: src=/opt/apache-tomcat-9.0.16 path=/usr/share/tomcat state=link
-
-- name: Change ownership of Tomcat installation
-  file: path=/usr/share/tomcat/ owner=tomcat group=tomcat state=directory recurse=yes
-
-- name: Configure Tomcat server
-  template: src=server.xml dest=/usr/share/tomcat/conf/
-
-  
-- name: Create  sample directory
-  file: 
-    path: "/opt/apache-tomcat-9.0.16/webapps/samples"
-    state: directory
-    mode: 0777
+- hosts: webservers
   become: true
-  
+  tasks:
+    - name: install apache2
+      apt: name=apache2 update_cache=yes state=latest
 
-- name: copy war file
-  copy: src=./target/ansibleapp-0.0.1-SNAPSHOT.war dest=/opt/apache-tomcat-9.0.16/webapps/
+    - name: enabled mod_rewrite
+      apache2_module: name=rewrite state=present
+      notify:
+         - restart apache2
 
-
-  notify: restart tomcat
-
-- name: Install Tomcat init script
-  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
-
-- name: Start Tomcat
-  service: name=tomcat state=started enabled=yes
-
-- name: wait for tomcat to start
-  wait_for: port={{http_port}}
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted

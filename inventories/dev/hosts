@@ -1,2 +1,2 @@
-[webservers]
-localhost
+[All]
+localhost:4200

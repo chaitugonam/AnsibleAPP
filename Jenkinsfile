@@ -46,7 +46,8 @@ pipeline {
                  
              
                
-               sh "ansible-playbook main.yml -i inventories/dev/hosts --user jenkins --key-file ~/.ssh/id_rsa"
+              
+                ansiblePlaybook credentialsId: 'tomcat', disableHostKeyChecking: true, installation: 'ansible2', inventory: 'inventories/dev/hosts', playbook: 'main.yml'
 
                
             

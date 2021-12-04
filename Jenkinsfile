@@ -46,7 +46,7 @@ pipeline {
                  
              
                
-               sh "ansiblePlaybook credentialsId: 'ansikey', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventories/dev/hosts', playbook: 'main.yml'"
+               ansiblePlaybook credentialsId: 'ansikey', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventories/dev/hosts', playbook: 'main.yml'
 
                
             
